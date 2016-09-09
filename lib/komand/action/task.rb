@@ -9,7 +9,7 @@ module Komand
         self.action = opts["action"]
         self.connection = opts["connection"]
         self.dispatcher = opts["dispatcher"] || Komand::Dispatcher::Stdout.new
-        self.message = opts["message"]["body"]
+        self.message = opts["message"]
       end
 
       def test

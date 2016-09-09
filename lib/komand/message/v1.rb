@@ -53,6 +53,7 @@ module Komand
           body["connection"] ||= {}
           body["dispatcher"] ||= {}
           body["input"] ||= {}
+          true
         end
 
         def validate_action_start!(body)
@@ -61,6 +62,7 @@ module Komand
           body["connection"] ||= {}
           body["dispatcher"] ||= {}
           body["input"] ||= {}
+          true
         end
 
         def marshal(msg, file=nil)
@@ -73,22 +75,21 @@ module Komand
         end
 
         def marshal_string(msg)
-          json.dump(msg)
+          JSON.dump(msg)
         end
 
         def unmarshal(reader)
           begin
-            msg = if file
-              reader.readlines
+            msg = if reader
+              reader.readlines[0] #TODO should we be joining here?
             else
-              ARGF.inject("") {|d, line| d << line }
+              ARGF.inject("") {|d, line| d << line; d }
             end
-
-            json.parse(msg)
+            msg = JSON.parse(msg)
             validate!(msg)
             msg
           rescue => e
-            raise ArgumentError.new("Invalid message json: #{e}")
+            raise ArgumentError.new("Invalid message json: #{e} #{e.backtrace}")
           end
         end
 
@@ -96,9 +97,10 @@ module Komand
           raise ArgumentError.new("No message version: #{msg}") unless msg["version"]
           raise ArgumentError.new("Invalid version: #{msg['version']} in #{msg}") unless msg["version"] != VERSION
           raise ArgumentError.new("No message type: #{msg}") unless msg["type"]
-          raise ArgumentError.new("Invalid type: #{msg['type']} in #{msg}") if VALID_TYPES.include?(msg["type"])
+          raise ArgumentError.new("Invalid type: #{msg['type']} in #{msg}") unless VALID_TYPES.include?(msg["type"])
           raise ArgumentError.new("No message body: #{msg}") unless msg["body"]
-          send("validate_#{msg['type']}!")
+
+          send("validate_#{msg['type']}!", msg["body"])
         end
       end
     end
