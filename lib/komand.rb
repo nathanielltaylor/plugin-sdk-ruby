@@ -4,6 +4,7 @@ require 'komand/dispatcher'
 require 'komand/message'
 require 'komand/plugin'
 require 'komand/trigger'
+require 'komand/util'
 require 'komand/variables'
 
 module Komand
