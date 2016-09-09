@@ -1,5 +1,4 @@
 require 'komand/action'
-require 'komand/task'
 require 'komand/connection'
 require 'komand/dispatcher'
 require 'komand/message'
