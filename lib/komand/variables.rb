@@ -9,11 +9,11 @@ module Komand
 
       def set(params, validate=true)
         self.parameters = params
-        self.validate if validate
+        self.validate! if validate
       end
 
       def validate!
-        JSON::Validator.validate!(self.schema, self.parameters) if schema
+        JSON::Validator.validate!(self.schema, self.parameters) if self.schema
       end
 
       def sample

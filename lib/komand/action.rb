@@ -2,19 +2,19 @@ require 'komand/action/task'
 
 module Komand
   class Action
-    attr_accessor :name, :description, :input, :output, :connection
+    attr_accessor :name, :description, :input, :output, :connection, :message
 
     def initialize(opts={})
-      ["name","input","message","output"].each do |prop|
-        self.send("#{prop}=",opts["prop"])
+      ["name","description","input","message","output"].each do |prop|
+        self.send("#{prop}=",opts[prop]) if opts[prop]
       end
     end
 
-    def test
+    def test(params={})
       raise NotImplementedError.new("test is not implemented")
     end
 
-    def run
+    def run(params={})
       raise NotImplementedError.new("test is not implemented")
     end
   end

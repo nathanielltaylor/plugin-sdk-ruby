@@ -40,7 +40,6 @@ module Komand
         end
       end
 
-      private
       def setup(validate=true)
         raise ArgumentError.new("No trigger input to trigger task") unless self.message
         self.dispatcher = Komand::Dispatcher::HTTP.new( self.message.dispatcher || {}) unless self.dispatcher

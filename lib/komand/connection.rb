@@ -10,10 +10,10 @@ module Komand
 
     def set(params)
       self.parameters = params
-      self.validate
+      self.validate!
     end
 
-    def validate
+    def validate!
       JSON::Validator.validate!(self.schema, self.parameters)
     end
 
