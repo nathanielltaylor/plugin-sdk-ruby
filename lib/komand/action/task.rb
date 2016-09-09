@@ -23,7 +23,7 @@ module Komand
           self.dispatcher.write(ok)
           true
         rescue => e
-          puts "Action test failure: #{e}"
+          puts "Action test failure: #{e} #{e.backtrace}"
           err = Komand::Message::V1.action_error({"meta"=>self.meta,"error"=>e.to_s})
           self.dispatcher.write(err)
           false
@@ -56,7 +56,7 @@ module Komand
           self.connection.connect(params)
           self.action.connection = self.connection
         end
-        self.action.input.set(self.message["input"]) if self.action.input
+        self.action.input.set(self.message["body"]["input"]) if self.action.input
       end
     end
   end
