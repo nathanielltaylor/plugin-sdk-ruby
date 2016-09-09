@@ -1,3 +1,5 @@
+require 'json-schema'
+
 module Komand
   class Connection
     attr_accessor :schema, :parameters
@@ -9,6 +11,10 @@ module Komand
     def set(params)
       self.parameters = params
       self.validate
+    end
+
+    def validate
+      JSON::Validator.validate!(self.schema, self.parameters)
     end
 
     def connect(params={})

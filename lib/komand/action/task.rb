@@ -1,3 +1,5 @@
+require 'json-schema'
+
 module Komand
   class Action
     class Task
@@ -16,7 +18,7 @@ module Komand
           output = self.action.test(params) # The above line implies action could be nil, but we go ahead and use it anyways after... exceptions as code flow?
           schema = self.action.output
 
-          schema.validate(output) if schema
+          JSON::Validator.validate!(schema, output) if schema
           ok = Komand::Message::V1.action_success({"meta"=>self.meta,"output"=>output})
           self.dispatcher.write(ok)
           true
@@ -34,7 +36,7 @@ module Komand
           params = self.action&.input.parameters || {}
           output = self.action.run(params)
           schema = self.action.output
-          schema.validate(output) if schema
+          JSON::Validator.validate!(schema, output) if schema
           ok = Komand::Message.action_success({"meta"=>self.meta,"output"=>output})
           self.dispatcher.write(ok)
         rescue => e

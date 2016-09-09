@@ -1,4 +1,5 @@
 require 'komand/action/task'
+
 module Komand
   class Action
     attr_accessor :name, :description, :input, :output, :connection
