@@ -47,7 +47,7 @@ module Komand
           envelope(ACTION_EVENT, only(opts, ["meta","error"]).merge("status"=>ERROR))
         end
 
-        def validate_trigger_start(body)
+        def validate_trigger_start!(body)
           raise ArgumentError.new("No body: #{body}") unless body
           raise ArgumentError.new("Missing trigger in #{body}") unless body["trigger"]
           body["connection"] ||= {}
@@ -55,7 +55,7 @@ module Komand
           body["input"] ||= {}
         end
 
-        def validate_action_start(body)
+        def validate_action_start!(body)
           raise ArgumentError.new("No body: #{body}") unless body
           raise ArgumentError.new("Missing action in #{body}") unless body["action"]
           body["connection"] ||= {}
@@ -63,8 +63,8 @@ module Komand
           body["input"] ||= {}
         end
 
-        def marshal(msg, file)
-          data = json.dump(msg)
+        def marshal(msg, file=nil)
+          data = JSON.dump(msg)
           if file
             File.open(file) { |f| f << data }
           else
@@ -85,20 +85,20 @@ module Komand
             end
 
             json.parse(msg)
-            validate(msg)
+            validate!(msg)
             msg
           rescue => e
             raise ArgumentError.new("Invalid message json: #{e}")
           end
         end
 
-        def validate(msg)
+        def validate!(msg)
           raise ArgumentError.new("No message version: #{msg}") unless msg["version"]
           raise ArgumentError.new("Invalid version: #{msg['version']} in #{msg}") unless msg["version"] != VERSION
           raise ArgumentError.new("No message type: #{msg}") unless msg["type"]
           raise ArgumentError.new("Invalid type: #{msg['type']} in #{msg}") if VALID_TYPES.include?(msg["type"])
           raise ArgumentError.new("No message body: #{msg}") unless msg["body"]
-          send("validate_#{msg['type']}")
+          send("validate_#{msg['type']}!")
         end
       end
     end

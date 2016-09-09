@@ -4,12 +4,12 @@ module Komand
     attr_accessor :name, :description, :connection, :sender, :input, :output
     def initialize(opts={})
       ["name","description","connection","sender","input","output"].each do |prop|
-        self.send("#{prop}=",opts[prop])
+        self.send("#{prop}=",opts[prop]) if opts[prop]
       end
     end
 
-    def submit(event) # Renamed from `send` in the other SDKs. Never name something `send` in ruby
-      self.output.validate(event) if self.output
+    def submit!(event) # Renamed from `send` in the other SDKs. Never name something `send` in ruby
+      self.output.validate!(event) if self.output
       self.sender.submit(event)
     end
 
