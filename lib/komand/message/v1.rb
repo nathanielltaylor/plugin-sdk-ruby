@@ -32,7 +32,7 @@ module Komand
         end
 
         def trigger_start(opts={})
-          envelope(TRIGGER_START, only(opts, ["action","meta","input","dispatcher","connection"]))
+          envelope(TRIGGER_START, only(opts, ["trigger","meta","input","dispatcher","connection"]))
         end
 
         def trigger_event(opts={})
